@@ -1,0 +1,40 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = '0.0.1'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+dependencies {
+    compile(
+            'com.amazonaws:aws-lambda-java-core:+',
+            'com.amazonaws:aws-lambda-java-events:+',
+            'com.amazonaws:aws-java-sdk-dynamodb:+',
+            'com.amazonaws:aws-java-sdk-ses:+'
+    )
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
+    //compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.9.0'
+
+
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+}
+
+build.dependsOn buildZip
